@@ -1,0 +1,24 @@
+{
+    "config": {
+        "enable_collect_everything": true
+    },
+    "editorParams": {},
+    "isAuthenticated": true,
+    "supportedCompression": [
+        "gzip",
+        "gzip-js",
+        "lz64"
+    ],
+    "featureFlags": {
+        "enabled-flag": true,
+        "group-flag": true,
+        "disabled-flag": false,
+        "multi-variate-flag": "hello",
+        "simple-flag": true,
+        "beta-feature": "decide-fallback-value",
+        "beta-feature2": "variant-2",
+        "false-flag-2": false,
+        "test-get-feature": "variant-1"
+    },
+    "sessionRecording": false
+}

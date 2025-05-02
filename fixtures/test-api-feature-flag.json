@@ -1,0 +1,96 @@
+{
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "flags": [
+        {
+            "id": 719,
+            "name": "",
+            "key": "simpleFlag",
+            "filters": {
+                "groups": [
+                    {
+                        "properties": [],
+                        "rollout_percentage": null
+                    }
+                ],
+                "payloads": { "true": "{\"test\": 1}" }
+            },
+            "deleted": false,
+            "active": true,
+            "is_simple_flag": true,
+            "rollout_percentage": null
+        },
+        {
+            "id": 719,
+            "name": "",
+            "key": "continuation-flag",
+            "filters": {
+                "groups": [
+                    {
+                        "properties": [],
+                        "rollout_percentage": null
+                    }
+                ],
+                "payloads": { "true": "{\"test\": 1}" }
+            },
+            "deleted": false,
+            "active": true,
+            "is_simple_flag": true,
+            "rollout_percentage": null,
+            "ensure_experience_continuity": true
+        },
+        {
+            "id": 720,
+            "name": "",
+            "key": "enabled-flag",
+            "filters": {
+                "groups": [
+                    {
+                        "properties": [],
+                        "rollout_percentage": null
+                    }
+                ],
+                "payloads": { "true": "{\"test\": 1}", "false": "{\"test\": 0}" }
+            },
+            "deleted": false,
+            "active": true,
+            "is_simple_flag": false,
+            "rollout_percentage": null
+        },
+        {
+            "id": 721,
+            "name": "",
+            "key": "disabled-flag",
+            "filters": {
+                "groups": [
+                    {
+                        "properties": [],
+                        "rollout_percentage": null
+                    }
+                ]
+            },
+            "deleted": false,
+            "active": true,
+            "is_simple_flag": false,
+            "rollout_percentage": null
+        },
+        {
+            "id": 722,
+            "name": "",
+            "key": "multi-variate-flag",
+            "filters": {
+                "groups": [
+                    {
+                        "properties": [],
+                        "rollout_percentage": null
+                    }
+                ]
+            },
+            "deleted": false,
+            "active": true,
+            "is_simple_flag": false,
+            "rollout_percentage": null
+        }
+    ]
+}
